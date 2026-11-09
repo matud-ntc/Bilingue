@@ -1,0 +1,16 @@
+## Interface: 16001
+## Title: Bilingüe
+## Notes: Dejá el mouse quieto sobre un item, hechizo, talento, NPC o zona y te muestra cómo se llama en el otro idioma (inglés <-> español).
+## Author: Matias
+## Version: 0.1.0
+## SavedVariables: BilingueDB
+## IconTexture: Interface\Icons\INV_Misc_Book_09
+
+Core.lua
+Data_enUS.lua
+Data_es.lua
+Hover.lua
+Tooltips.lua
+Map.lua
+Frames.lua
+Search.lua
