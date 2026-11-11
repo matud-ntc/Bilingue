@@ -48,4 +48,6 @@ jobs:
           files: dist/Bilingue.zip
           generate_release_notes: true
           body: |
-            **Instalación:** descomprimí `Bilingue.zip` dentro de `World of Warcraft/_forever_/Interface/AddOns/` (tiene que quedar la carpeta `Bilingue` adentro de `AddOns`) y reiniciá el juego.
+            **Bajá `Bilingue.zip`** (no los *Source code*, que traen la carpeta con otro nombre).
+
+            Abrí el zip y arrastrá la carpeta `Bilingue` a `World of Warcraft/_forever_/Interface/AddOns/`. Tiene que quedar `AddOns/Bilingue/Bilingue.toc`. Después reiniciá el juego.
