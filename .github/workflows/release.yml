@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the tag matches the .toc version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          toc=$(grep -oP '^## Version:\s*\K\S+' Bilingue/Bilingue.toc)
+          tag="${GITHUB_REF_NAME#v}"
+          if [ "$toc" != "$tag" ]; then
+            echo "Bilingue.toc says $toc but the tag is $tag" >&2
+            exit 1
+          fi
+
+      - name: Syntax-check Lua
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq lua5.1 >/dev/null
+          find Bilingue -name '*.lua' -print0 | xargs -0 -n1 luac5.1 -p
+
+      - name: Build zip
+        run: |
+          mkdir -p dist
+          cp LICENSE Bilingue/LICENSE
+          zip -qr dist/Bilingue.zip Bilingue
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bilingue
+          path: dist/Bilingue.zip
+
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/Bilingue.zip
+          generate_release_notes: true
+          body: |
+            **Instalación:** descomprimí `Bilingue.zip` dentro de `World of Warcraft/_forever_/Interface/AddOns/` (tiene que quedar la carpeta `Bilingue` adentro de `AddOns`) y reiniciá el juego.

@@ -24,8 +24,8 @@ local function ItemLink(id, name)
   return "|cffffffff|Hitem:" .. id .. "::::::::::::|h[" .. name .. "]|h|r"
 end
 
-local function Search(query)
-  query = Fold(query)
+local function Search(raw)
+  local query = Fold(raw)
   local hits = {}
   local function Consider(own, other, display)
     local s = math.max(Score(own, query), Score(other, query))
@@ -49,7 +49,7 @@ local function Search(query)
   end)
 
   if #hits == 0 then
-    ns.Print("nada para \"" .. query .. "\"")
+    ns.Print("no encontré \"" .. raw .. "\" en ningún idioma.")
     return
   end
   local seen, shown = {}, 0
@@ -63,7 +63,7 @@ local function Search(query)
     end
   end
   if #hits > shown then
-    DEFAULT_CHAT_FRAME:AddMessage("|cff808080+" .. (#hits - shown) .. "|r")
+    DEFAULT_CHAT_FRAME:AddMessage("|cff808080y " .. (#hits - shown) .. " más; probá con un nombre más completo.|r")
   end
 end
 
@@ -76,14 +76,15 @@ SlashCmdList.BILINGUE = function(msg)
 
   if cmd == "on" or cmd == "off" then
     BilingueDB.enabled = cmd == "on"
-    ns.Print(BilingueDB.enabled and "activado" or "desactivado")
+    ns.Print(BilingueDB.enabled and "activado." or "desactivado.")
   elseif cmd == "delay" and tonumber(rest) then
     BilingueDB.delay = math.max(0, math.min(5, tonumber(rest)))
-    ns.Print("demora " .. BilingueDB.delay .. "s")
+    ns.Print(BilingueDB.delay == 0 and "la traducción aparece al instante."
+      or ("la traducción aparece después de " .. BilingueDB.delay .. " s."))
   elseif msg ~= "" then
     Search(msg)
   else
-    ns.Print("/bil <texto> busca en los dos idiomas · /bil delay " .. BilingueDB.delay
-      .. " · /bil " .. (BilingueDB.enabled and "off" or "on"))
+    ns.Print("/bil <nombre> lo busca en inglés y en español, por ejemplo /bil flor de paz")
+    ns.Print("/bil delay " .. BilingueDB.delay .. " cambia la espera · /bil " .. (BilingueDB.enabled and "off" or "on"))
   end
 end

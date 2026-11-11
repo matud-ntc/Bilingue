@@ -76,5 +76,5 @@ function ns.OnLoad(fn)
 end
 
 function ns.Print(msg)
-  DEFAULT_CHAT_FRAME:AddMessage(COLOR .. "Bilingüe|r " .. msg)
+  DEFAULT_CHAT_FRAME:AddMessage(COLOR .. "Bilingüe:|r " .. msg)
 end

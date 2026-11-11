@@ -1,42 +1,53 @@
 # Bilingüe
 
-Addon para **World of Warcraft: Forever**. Dejás el mouse quieto un momento sobre algo y abajo aparece cómo se llama en el otro idioma: si jugás en inglés te muestra el nombre en español (esMX), y si jugás en español te muestra el inglés.
+Addon para **World of Warcraft: Forever** pensado para jugar con gente que tiene el juego en otro idioma. Dejás el mouse quieto un segundo y medio sobre algo y aparece, en celeste, cómo se llama en el otro idioma:
+
+- si tu juego está en inglés, te muestra el nombre en español;
+- si está en español, te muestra el nombre en inglés.
+
+Así, cuando alguien te dice "andá a buscar *Flor de paz*", sabés que es *Peacebloom*.
+
+## Instalar
+
+1. Bajá **[Bilingue.zip](https://github.com/matud-ntc/Bilingue/releases/latest/download/Bilingue.zip)**.
+2. Descomprimilo dentro de la carpeta de addons de Forever:
+   `C:\Program Files (x86)\World of Warcraft\_forever_\Interface\AddOns\`
+   Tiene que quedar la carpeta `Bilingue` adentro de `AddOns`.
+3. Cerrá y abrí el juego. En la selección de personaje, en **AddOns**, fijate que esté tildado.
+
+Para actualizar, repetí los mismos pasos y reemplazá la carpeta.
 
 ## Dónde aparece
 
-| Dónde | Qué traduce |
+- **Tooltips**: items (bolsas, vendedores, loot, subasta, links del chat), hechizos, talentos, buffs, NPCs y su título, hierbas, vetas y cofres.
+- **Mapa del mundo**: la zona, subzona o mazmorra que tenés debajo del cursor.
+- **Minimapa**: al pasar el mouse por el nombre de la zona.
+- **Registro de misiones**: el título de cada misión y los nombres de zona.
+
+Los nombres que son iguales en los dos idiomas (Durotar, Orgrimmar, Thrall) no muestran nada.
+
+## Comandos
+
+| Comando | Qué hace |
 |---|---|
-| Tooltips | items (bolsas, vendor, loot, AH, links del chat), hechizos, talentos, buffs, NPCs y su título (`<Weaponsmith>`), hierbas, vetas, cofres, misiones linkeadas |
-| Mapa del mundo | la zona, subzona o mazmorra que tenés debajo del cursor |
-| Minimapa | zona y subzona al pasar por el nombre |
-| Log de misiones | título de la misión y nombre de la zona en los encabezados |
-| `/bil <texto>` | busca en los dos idiomas, con o sin tildes: `/bil trueno furioso`, `/bil peacebloom` |
+| `/bil flor de paz` | busca un nombre en los dos idiomas (no importan las tildes ni las mayúsculas) |
+| `/bil delay 0.5` | cambia la espera antes de mostrar la traducción (`0` = al instante) |
+| `/bil off` · `/bil on` | lo apaga y lo prende |
 
-`/bil delay 1.5` cambia la demora (0 = al instante) · `/bil off` / `/bil on`. También responde a `/trad`.
+`/trad` funciona igual que `/bil`.
 
-## Instalación
+## Para desarrollo
 
-Copiar (o symlinkear) `Bilingue/` en `World of Warcraft/_forever_/Interface/AddOns/` y reiniciar el juego.
-
-## Datos
-
-`scripts/build_data.py` genera `Data_enUS.lua` (lo carga un cliente en inglés) y `Data_es.lua` (esMX/esES). Cada cliente solo arma en memoria el suyo.
-
-| Fuente | Qué aporta |
-|---|---|
-| [wago.tools](https://wago.tools) DB2 de la build de Forever, enUS y esMX | items, hechizos/talentos, zonas, mapas, facciones, profesiones, clases, razas |
-| QuestieDB instalado (datos de Forever + `l10n/Forever`) | NPCs y títulos, misiones, objetos |
-
-Al cambiar de parche:
+Los nombres salen de las tablas del cliente de Forever ([wago.tools](https://wago.tools), inglés y español de Latinoamérica) y de [QuestieDB](https://github.com/Questie/QuestieDB) (NPCs, misiones, objetos). Cuando Forever cambia de parche hay que regenerarlos:
 
 ```
-python3 scripts/build_data.py --build <versión de wowf>
+python3 scripts/build_data.py --build <versión>
 ```
 
-La versión está en `World of Warcraft/.build.info` (línea `wowf`). Los CSV quedan cacheados en `.cache/`. Necesita `lua5.4` para leer QuestieDB.
+La versión está en `World of Warcraft/.build.info`, en la línea de `wowf`. Necesita `lua5.4` y QuestieDB instalado (o `--questiedb <ruta>`).
 
-Nombres que son iguales en los dos idiomas (Durotar, Orgrimmar, Thrall) no muestran nada.
+Para publicar una versión: subir `## Version:` en `Bilingue/Bilingue.toc`, después `git tag vX.Y.Z && git push --tags`. GitHub Actions arma el zip y crea la release.
 
 ## Licencia
 
-GPL-3.0 (los nombres de NPCs, misiones y objetos vienen de QuestieDB, GPL-3.0).
+GPL-3.0. Los nombres de NPCs, misiones y objetos vienen de QuestieDB (GPL-3.0).

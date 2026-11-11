@@ -1,6 +1,6 @@
 ## Interface: 16001
 ## Title: Bilingüe
-## Notes: Dejá el mouse quieto sobre un item, hechizo, talento, NPC o zona y te muestra cómo se llama en el otro idioma (inglés <-> español).
+## Notes: Muestra cómo se llaman las cosas en el otro idioma (inglés ↔ español): items, hechizos, talentos, NPCs, misiones y zonas.
 ## Author: Matias
 ## Version: 0.1.0
 ## SavedVariables: BilingueDB
