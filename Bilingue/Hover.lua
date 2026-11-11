@@ -9,7 +9,7 @@ local function HasLine(tooltip, text)
   local name = tooltip:GetName()
   for i = 1, tooltip:NumLines() do
     local fs = _G[name .. "TextLeft" .. i]
-    if fs and fs:GetText() == text then return true end
+    if fs and ns.Public(fs:GetText()) == text then return true end
   end
   return false
 end

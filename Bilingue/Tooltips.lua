@@ -9,10 +9,11 @@ local WATCHED = {
 
 local function LineText(tooltip, i)
   local fs = _G[tooltip:GetName() .. "TextLeft" .. i]
-  return fs and fs:GetText()
+  return fs and ns.Public(fs:GetText())
 end
 
 local function NpcID(guid)
+  guid = ns.Public(guid)
   if not guid then return nil end
   local kind, _, _, _, _, id = strsplit("-", guid)
   if kind == "Creature" or kind == "Vehicle" then return tonumber(id) end
@@ -21,14 +22,15 @@ end
 local function Translate(tooltip, data)
   local T = Enum.TooltipDataType
   local first = LineText(tooltip, 1)
+  local id = ns.Public(data.id)
 
-  if data.type == T.Item and data.id then
-    local tr = ns.Item(data.id) or ns.Name(first)
-    return "i" .. data.id, { tr }
+  if data.type == T.Item and id then
+    local tr = ns.Item(id) or ns.Name(first)
+    return "i" .. id, { tr }
   end
 
   if data.type == T.Unit then
-    local guid = data.guid
+    local guid = ns.Public(data.guid)
     local tr = ns.Npc(NpcID(guid)) or ns.Name(first)
     local lines = { tr }
     -- NPC title ("Weaponsmith", "Flight Master") sits on line 2.
@@ -37,8 +39,8 @@ local function Translate(tooltip, data)
     return "u" .. (guid or first or ""), lines
   end
 
-  if data.type == T.Quest and data.id then
-    return "q" .. data.id, { ns.Quest(data.id) }
+  if data.type == T.Quest and id then
+    return "q" .. id, { ns.Quest(id) }
   end
 
   -- Spells, talents, auras, objects (herbs, veins, chests), macros of spells...
@@ -53,7 +55,7 @@ ns.OnLoad(function()
     if _G[name] then watched[_G[name]] = true end
   end
   TooltipDataProcessor.AddTooltipPostCall(TooltipDataProcessor.AllTypes, function(tooltip, data)
-    if not watched[tooltip] or not data then return end
+    if not watched[tooltip] or not data or not ns.Public(data.type) then return end
     local key, lines = Translate(tooltip, data)
     ns.Reveal(tooltip, key, lines)
   end)

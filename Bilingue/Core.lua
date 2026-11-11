@@ -15,6 +15,13 @@ function ns.LoadsData(...)
 end
 
 local COLOR = "|cff8ccfff"
+
+-- 12.x clients hand addons "secret" values (tooltip text in combat, unit GUIDs...).
+-- Touching one errors out, so anything read from the game goes through this first.
+function ns.Public(v)
+  if issecretvalue and issecretvalue(v) then return nil end
+  return v
+end
 ns.COLOR = COLOR
 
 local function StripMarkup(s)
@@ -22,7 +29,8 @@ local function StripMarkup(s)
 end
 
 function ns.CleanName(s)
-  if not s then return nil end
+  s = ns.Public(s)
+  if type(s) ~= "string" then return nil end
   s = StripMarkup(s)
   s = s:gsub("%s*%(%d+%-?%d*%)$", "")   -- " (10-20)" level range on map labels
   s = s:gsub("^%s+", ""):gsub("%s+$", "")
